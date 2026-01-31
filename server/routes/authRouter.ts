@@ -11,9 +11,7 @@ authRouter.post("/login", async (req: Request, res: Response) => {
     const { identifier, password } = req.body;
 
     if (!identifier || !password || isEmpty([identifier, password]))
-      return res
-        .status(400)
-        .json({ message: "Username and password are required." });
+      return res.status(400).send("Username and password are required.");
 
     let bacToken;
     try {
@@ -25,7 +23,7 @@ authRouter.post("/login", async (req: Request, res: Response) => {
       if (response.data.success) {
         bacToken = response.data.data._token;
       } else {
-        return res.status(500).json({ message: "BAC authentication failed." });
+        return res.status(500).send("BAC authentication failed.");
       }
     } catch (error: any) {
       return res
@@ -92,6 +90,6 @@ authRouter.post("/login", async (req: Request, res: Response) => {
 
     return res.status(200).json({ bacToken, token });
   } catch (error) {
-    return res.status(500).json({ message: (error as Error).message });
+    return res.status(500).send((error as Error).message);
   }
 });
