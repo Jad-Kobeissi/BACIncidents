@@ -5,6 +5,20 @@ import * as SecureStore from "expo-secure-store";
 import { ActivityIndicator, View } from "react-native";
 
 export default function RootLayout() {
+  useEffect(() => {
+    const fetchToken = async () => {
+      const token = await SecureStore.getItemAsync("token");
+      console.log("token: " + token);
+      console.log("parent: " + (await SecureStore.getItemAsync("parent")));
+
+      if (token) {
+        router.replace("/(tabs)");
+      } else {
+        router.replace("/");
+      }
+    };
+    fetchToken();
+  }, []);
   return (
     <UserProvider>
       <Stack screenOptions={{ headerShown: false }}>

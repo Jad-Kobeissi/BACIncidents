@@ -47,6 +47,7 @@ export default function Index() {
           flexDirection: "row",
           alignItems: "center",
           gap: 10,
+          width: 300,
         }}
       >
         <View
@@ -153,9 +154,12 @@ export default function Index() {
       </View>
       <View
         style={{
+          marginTop: 10,
           alignItems: "center",
           flexDirection: "column",
           gap: 20,
+          justifyContent: "center",
+          paddingTop: 20,
         }}
       >
         {cards.map((card, index) => (

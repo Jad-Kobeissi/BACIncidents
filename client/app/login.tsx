@@ -2,7 +2,7 @@ import { Svg, Path } from "react-native-svg";
 import { colors } from "@/themes/colors";
 import * as SecureStore from "expo-secure-store";
 import axios from "axios";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import {
   ActivityIndicator,
   Text,
@@ -11,13 +11,15 @@ import {
   View,
 } from "react-native";
 import { router } from "expo-router";
-import { UseUser } from "@/contexts/UserContext";
+import { TUserContext, UserContext } from "@/contexts/UserContext";
 
 export default function Login() {
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const { setParent } = UseUser();
+  const { setParent } = useContext<TUserContext>(
+    UserContext as React.Context<TUserContext>,
+  );
   return loading ? (
     <ActivityIndicator
       style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
@@ -88,19 +90,18 @@ export default function Login() {
           onPress={() => {
             setLoading(true);
             axios
-              .post("http://192.168.1.22:3000/api/login", {
+              .post(`${process.env.EXPO_PUBLIC_API_URL}/api/login`, {
                 identifier,
                 password,
               })
               .then(async (res) => {
-                alert(res.data.token);
                 await SecureStore.setItemAsync("token", res.data.token);
-                router.push("/(tabs)/profile");
                 setParent(res.data.parent);
+                router.push("/(tabs)");
               })
               .catch((err) => {
-                console.log(err);
-                alert(err.response.data || "An error occurred");
+                console.log(err.error);
+                alert(err.response.data || "Error logging in");
               })
               .finally(() => setLoading(false));
           }}
@@ -110,7 +111,7 @@ export default function Login() {
       </View>
       <TouchableOpacity
         style={{ flexDirection: "row", alignItems: "center", gap: 5 }}
-        onPress={() => router.back()}
+        onPress={() => router.replace("/")}
       >
         <Svg width={24} height={24} viewBox="0 0 640 640" fill={"black"}>
           <Path d="M73.4 297.4C60.9 309.9 60.9 330.2 73.4 342.7L233.4 502.7C245.9 515.2 266.2 515.2 278.7 502.7C291.2 490.2 291.2 469.9 278.7 457.4L173.3 352L544 352C561.7 352 576 337.7 576 320C576 302.3 561.7 288 544 288L173.3 288L278.7 182.6C291.2 170.1 291.2 149.8 278.7 137.3C266.2 124.8 245.9 124.8 233.4 137.3L73.4 297.3z" />

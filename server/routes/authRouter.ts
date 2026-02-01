@@ -4,6 +4,7 @@ import { prisma } from "../lib/prisma";
 import axios from "axios";
 import { sign } from "jsonwebtoken";
 import { compare, hash } from "bcrypt";
+import type { TChild } from "../types";
 
 export const authRouter = express.Router();
 
@@ -47,8 +48,8 @@ authRouter.post("/login", async (req: Request, res: Response) => {
       children = response.data.data.learners;
 
       lastName = children[0]?.learner
-        .split(" ")[1]
-        ?.toLocaleLowerCase() as string;
+        .split(" ")
+        [children.length - 1]?.toLocaleLowerCase() as string;
     } catch (error: any) {
       return res
         .status(error.response.status)
@@ -64,6 +65,8 @@ authRouter.post("/login", async (req: Request, res: Response) => {
       },
     });
 
+    let dbChildren: Array<TChild> = (parent?.children as Array<TChild>) || [];
+
     if (!parent) {
       const newParent = await prisma.parent.create({
         data: {
@@ -73,7 +76,7 @@ authRouter.post("/login", async (req: Request, res: Response) => {
       });
 
       children.map(async (child) => {
-        await prisma.child.create({
+        const newChild = await prisma.child.create({
           data: {
             name: ((child.learner.split(" ")[0] as string) +
               " " +
@@ -82,11 +85,13 @@ authRouter.post("/login", async (req: Request, res: Response) => {
             grade: child.class,
           },
         });
+
+        dbChildren.push(newChild as TChild);
       });
     }
 
     const token = await sign(
-      { id: parent?.id, children, parent, isAdmin: false },
+      { id: parent?.id, children: dbChildren, parent, isAdmin: false },
       process.env.JWT_SECRET as string,
     );
 
