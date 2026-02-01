@@ -11,11 +11,13 @@ import {
   View,
 } from "react-native";
 import { router } from "expo-router";
+import { UseUser } from "@/contexts/UserContext";
 
 export default function Login() {
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const { setParent } = UseUser();
   return loading ? (
     <ActivityIndicator
       style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
@@ -28,82 +30,92 @@ export default function Login() {
         justifyContent: "center",
       }}
     >
-      <Text>login screen</Text>
-      <Svg width={50} height={50} viewBox="0 0 24 24" fill="none">
-        <Path
-          d="M12 21C16.9706 21 21 16.9706 21 12C21 7.0294 16.9706 2.99994 12 2.99994C7.0294 2.99994 2.99994 7.0294 2.99994 12C2.99994 16.9706 7.0294 21 12 21Z"
-          stroke="#000000"
-          stroke-linecap="square"
-          stroke-linejoin="round"
-          stroke-width="1.99991"
-        />
-        <Path
-          d="M12 7C12.5523 7 13 7.44772 13 8C13 8.55228 12.5523 9 12 9C11.4477 9 11 8.55228 11 8C11 7.44772 11.4477 7 12 7Z"
-          fill="#000000"
-        />
-        <Path d="M12 17V11" stroke="#000000" strokeWidth="2" />
-      </Svg>
-      <TextInput
-        placeholder="Identifier"
-        value={identifier}
-        onChangeText={setIdentifier}
-        autoCapitalize="none"
-        style={{
-          color: "black",
-          borderColor: colors.borderColor,
-          borderWidth: 1,
-          paddingHorizontal: 50,
-          paddingVertical: 2,
-          borderRadius: 5,
-          marginBottom: 10,
-          fontSize: 12,
-        }}
-        placeholderTextColor={colors.placeholderText}
-      />
-      <TextInput
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry={true}
-        placeholderTextColor={colors.placeholderText}
-        style={{
-          color: "black",
-          borderColor: colors.borderColor,
-          borderWidth: 1,
-          paddingInline: 50,
-          borderRadius: 5,
-          marginBottom: 10,
-          paddingBlock: 2,
-        }}
-      />
+      <View style={{ alignItems: "center", gap: 5, marginBottom: 20 }}>
+        <Text style={{ fontSize: 24, fontWeight: "500" }}>Welcome Back!</Text>
+        <Text style={{ color: colors.placeholderText }}>
+          Sign in to your account to continue
+        </Text>
+      </View>
+      <View style={{ gap: 5, marginBottom: 20 }}>
+        <View>
+          <Text style={{ color: colors.placeholderText }}>SIS Identifier</Text>
+          <TextInput
+            placeholder="Identifier"
+            value={identifier}
+            onChangeText={setIdentifier}
+            autoCapitalize="none"
+            style={{
+              color: "black",
+              borderColor: colors.borderColor,
+              borderWidth: 1,
+              paddingHorizontal: 80,
+              paddingVertical: 8,
+              borderRadius: 5,
+              marginBottom: 10,
+              fontSize: 12,
+            }}
+            placeholderTextColor={colors.placeholderText}
+          />
+        </View>
+        <View>
+          <Text style={{ color: colors.placeholderText }}>Password</Text>
+          <TextInput
+            placeholder="Password"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry={true}
+            placeholderTextColor={colors.placeholderText}
+            style={{
+              color: "black",
+              borderColor: colors.borderColor,
+              borderWidth: 1,
+              paddingHorizontal: 80,
+              paddingVertical: 8,
+              borderRadius: 5,
+              marginBottom: 10,
+              fontSize: 12,
+            }}
+          />
+        </View>
+        <TouchableOpacity
+          style={{
+            backgroundColor: colors.brandColor,
+            padding: 10,
+            borderRadius: 5,
+            paddingHorizontal: 20,
+            paddingVertical: 5,
+          }}
+          onPress={() => {
+            setLoading(true);
+            axios
+              .post("http://192.168.1.22:3000/api/login", {
+                identifier,
+                password,
+              })
+              .then(async (res) => {
+                alert(res.data.token);
+                await SecureStore.setItemAsync("token", res.data.token);
+                router.push("/(tabs)/profile");
+                setParent(res.data.parent);
+              })
+              .catch((err) => {
+                console.log(err);
+                alert(err.response.data || "An error occurred");
+              })
+              .finally(() => setLoading(false));
+          }}
+        >
+          <Text style={{ color: "white", textAlign: "center" }}>LogIn</Text>
+        </TouchableOpacity>
+      </View>
       <TouchableOpacity
-        style={{
-          backgroundColor: colors.brandColor,
-          padding: 10,
-          borderRadius: 5,
-          paddingHorizontal: 20,
-          paddingVertical: 5,
-        }}
-        onPress={() => {
-          setLoading(true);
-          axios
-            .post("http://192.168.1.22:3000/api/login", {
-              identifier,
-              password,
-            })
-            .then(async (res) => {
-              alert(res.data.token);
-              await SecureStore.setItemAsync("token", res.data.token);
-              router.push("/home");
-            })
-            .catch((err) => {
-              console.log(err);
-              alert(err.response.data || "An error occurred");
-            })
-            .finally(() => setLoading(false));
-        }}
+        style={{ flexDirection: "row", alignItems: "center", gap: 5 }}
+        onPress={() => router.back()}
       >
-        <Text style={{ color: "white" }}>LogIn</Text>
+        <Svg width={24} height={24} viewBox="0 0 640 640" fill={"black"}>
+          <Path d="M73.4 297.4C60.9 309.9 60.9 330.2 73.4 342.7L233.4 502.7C245.9 515.2 266.2 515.2 278.7 502.7C291.2 490.2 291.2 469.9 278.7 457.4L173.3 352L544 352C561.7 352 576 337.7 576 320C576 302.3 561.7 288 544 288L173.3 288L278.7 182.6C291.2 170.1 291.2 149.8 278.7 137.3C266.2 124.8 245.9 124.8 233.4 137.3L73.4 297.3z" />
+        </Svg>
+        <Text>Back</Text>
       </TouchableOpacity>
     </View>
   );
