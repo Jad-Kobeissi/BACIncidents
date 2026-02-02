@@ -11,7 +11,8 @@ export interface TUserContext {
 export const UserContext = createContext<TUserContext | null>(null);
 export function UserProvider({ children }: { children: React.ReactNode }) {
   const [parent, setParentState] = useState<TParent | null>(null);
-  const setParent = (parent: TParent | null) => {
+  const setParent = async (parent: TParent | null) => {
+    await SecureStore.setItemAsync("parent", JSON.stringify(parent));
     setParentState(parent);
   };
 
@@ -29,7 +30,6 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         const parentObj: TParent = JSON.parse(parentString);
         setParentState(parentObj);
         await SecureStore.setItemAsync("parent", parentString);
-        console.log("parent: " + parentString);
       }
     };
     loadParent();

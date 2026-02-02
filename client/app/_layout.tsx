@@ -8,10 +8,9 @@ export default function RootLayout() {
   useEffect(() => {
     const fetchToken = async () => {
       const token = await SecureStore.getItemAsync("token");
-      console.log("token: " + token);
-      console.log("parent: " + (await SecureStore.getItemAsync("parent")));
+      const parent = await SecureStore.getItemAsync("parent");
 
-      if (token) {
+      if (token && parent) {
         router.replace("/(tabs)");
       } else {
         router.replace("/");

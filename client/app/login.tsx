@@ -88,7 +88,7 @@ export default function Login() {
             paddingVertical: 5,
           }}
           onPress={() => {
-            setLoading(true);
+            
             axios
               .post(`${process.env.EXPO_PUBLIC_API_URL}/api/login`, {
                 identifier,
@@ -100,7 +100,6 @@ export default function Login() {
                 router.push("/(tabs)");
               })
               .catch((err) => {
-                console.log(err.error);
                 alert(err.response.data || "Error logging in");
               })
               .finally(() => setLoading(false));

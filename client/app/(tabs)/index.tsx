@@ -16,22 +16,21 @@ export default function Page() {
   const [incidents, setIncidents] = useState<TIncident[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
   const context = useContext<TUserContext>(
     UserContext as React.Context<TUserContext>,
   );
 
   const fetchIncidents = async () => {
-    console.log(process.env.EXPO_PUBLIC_API_URL);
-    console.log("parent2: " + context.parent?.name);
-
     axios
-      .get(`${process.env.EXPO_PUBLIC_API_URL}/api/incidents`, {
+      .get(`${process.env.EXPO_PUBLIC_API_URL}/api/incidents?page=${page}`, {
         headers: {
           Authorization: `Bearer ${await SecureStore.getItemAsync("token")}`,
         },
       })
       .then((res) => {
         setIncidents(res.data);
+        setPage((prev) => prev + 1);
       })
       .catch((err) => {
         console.log(err);
@@ -44,8 +43,6 @@ export default function Page() {
         alert("Please LogIn");
         router.replace("/login");
       }
-      console.log("token token: " + (await SecureStore.getItemAsync("token")));
-      console.log("parent parent: " + context.parent);
     };
     validateToken();
   }, []);
@@ -93,20 +90,6 @@ export default function Page() {
           </Text>
         </View>
       </View>
-      {error !== "" ||
-        (error !== null && (
-          <Text
-            style={{
-              color: colors.dangerColor,
-              fontSize: 18,
-              textAlign: "center",
-              marginVertical: 30,
-              fontWeight: "500",
-            }}
-          >
-            {error}
-          </Text>
-        ))}
       <View>
         <Text
           style={{
@@ -126,6 +109,21 @@ export default function Page() {
           keyExtractor={(item) => item.id.toString()}
         ></FlatList>
       </View>
+      {error != ""
+        ? error !== null && (
+            <Text
+              style={{
+                color: colors.dangerColor,
+                fontSize: 18,
+                textAlign: "center",
+                marginVertical: 60,
+                fontWeight: "500",
+              }}
+            >
+              {error}
+            </Text>
+          )
+        : null}
     </View>
   );
 }

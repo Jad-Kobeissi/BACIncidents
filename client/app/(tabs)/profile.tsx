@@ -1,5 +1,6 @@
 import { TUserContext, UserContext } from "@/contexts/UserContext";
 import { colors } from "@/themes/colors";
+import { router } from "expo-router";
 import { useContext } from "react";
 import { TouchableOpacity, View } from "react-native";
 import { Text } from "react-native";
@@ -49,7 +50,13 @@ export default function Profile() {
           My Children:{" "}
         </Text>
         {parent?.children.map((c) => (
-          <View
+          <TouchableOpacity
+            onPress={() =>
+              router.navigate({
+                pathname: `/child/[id]`,
+                params: { id: c.id },
+              })
+            }
             style={{
               flexDirection: "row",
               alignItems: "center",
@@ -83,7 +90,7 @@ export default function Profile() {
             <Text style={{ color: colors.secondaryText, fontWeight: "500" }}>
               {c.grade}
             </Text>
-          </View>
+          </TouchableOpacity>
         ))}
       </View>
       <TouchableOpacity
