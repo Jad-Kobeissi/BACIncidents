@@ -4,7 +4,9 @@ import dotenv from "dotenv";
 import cors from "cors";
 import { incidentsRouter } from "./routes/incidentsRouter";
 import { childRouter } from "./routes/childRouter";
+import "dotenv/config";
 
+dotenv.config();
 const app = express();
 dotenv.config();
 app.use(cors());
