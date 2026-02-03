@@ -7,8 +7,6 @@ import { useContext, useEffect, useState } from "react";
 import { TIncident } from "@/types";
 import axios from "axios";
 import { colors } from "@/themes/colors";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
-import Svg, { Path } from "react-native-svg";
 import Incident from "@/components/Incident";
 import { FlatList } from "react-native";
 
@@ -47,6 +45,8 @@ export default function Page() {
     validateToken();
   }, []);
   useEffect(() => {
+    console.log(SecureStore.getItem("parent"));
+
     if (!context.parent) return;
     fetchIncidents();
   }, [context.parent]);

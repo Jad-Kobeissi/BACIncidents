@@ -15,7 +15,9 @@ export default function RootLayout() {
       } else {
         router.replace("/");
       }
+      console.log(parent);
     };
+
     fetchToken();
   }, []);
   return (

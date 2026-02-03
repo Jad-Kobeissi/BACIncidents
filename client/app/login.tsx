@@ -88,7 +88,7 @@ export default function Login() {
             paddingVertical: 5,
           }}
           onPress={() => {
-            
+            setLoading(true);
             axios
               .post(`${process.env.EXPO_PUBLIC_API_URL}/api/login`, {
                 identifier,
