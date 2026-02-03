@@ -1,9 +1,9 @@
 import express, { type Request, type Response } from "express";
-import { authRouter } from "./routes/authRouter";
+import { authRouter } from "./routes/authRouter.js";
 import dotenv from "dotenv";
 import cors from "cors";
-import { incidentsRouter } from "./routes/incidentsRouter";
-import { childRouter } from "./routes/childRouter";
+import { incidentsRouter } from "./routes/incidentsRouter.js";
+import { childRouter } from "./routes/childRouter.js";
 import "dotenv/config";
 
 dotenv.config();

@@ -1,8 +1,8 @@
 import express, { response, type Request, type Response } from "express";
 import { verify } from "jsonwebtoken";
-import type { TJWT } from "../types";
-import { prisma } from "../lib/prisma";
-import { isEmpty } from "../isEmpty";
+import type { TJWT } from "../types.js";
+import { prisma } from "../lib/prisma.js";
+import { isEmpty } from "../isEmpty.js";
 
 export const incidentsRouter = express.Router();
 

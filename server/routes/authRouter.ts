@@ -1,10 +1,10 @@
 import express, { type Request, type Response } from "express";
-import { isEmpty } from "../isEmpty";
-import { prisma } from "../lib/prisma";
+import { isEmpty } from "../isEmpty.js";
+import { prisma } from "../lib/prisma.js";
 import axios from "axios";
 import { sign } from "jsonwebtoken";
 import { compare, hash } from "bcrypt";
-import type { TChild } from "../types";
+import type { TChild } from "../types.js";
 
 export const authRouter = express.Router();
 
