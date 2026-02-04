@@ -50,16 +50,21 @@ incidentsRouter.post("/", async (req: Request, res: Response) => {
     if (!authHeader || !verify(authHeader, process.env.JWT_SECRET!))
       return res.status(401).send("Unauthorized");
 
-    const { childId, title, description, category } = req.body;
+    const { childId, title, description, category, severity } = req.body;
 
     if (
       !childId ||
       !title ||
       !description ||
       !category ||
+      !severity ||
       isEmpty([title, description, category])
     )
       return res.status(400).send("Missing required fields");
+
+    if (severity > 5 || severity < 1)
+      return res.status(400).send("Severity must be between 1-5");
+
     const child = await prisma.child.findUnique({
       where: {
         id: childId,
@@ -75,6 +80,7 @@ incidentsRouter.post("/", async (req: Request, res: Response) => {
         occurredAt: new Date(),
         childId: child.id,
         category,
+        severity,
       },
       include: {
         child: true,

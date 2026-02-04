@@ -24,3 +24,36 @@ childRouter.get("/:id", async (req, res) => {
     return res.status(500).send((error as Error).message);
   }
 });
+
+childRouter.get("/behaviour/:id", async (req, res) => {
+  try {
+    const authHeader = req.headers["authorization"]?.split(" ")[1];
+
+    if (!authHeader || !verify(authHeader, process.env.JWT_SECRET!))
+      return res.status(401).send("Unauthorized");
+
+    const { id } = req.params;
+
+    const child = await prisma.child.findUnique({
+      where: { id: Number(id) },
+    });
+
+    if (!child) return res.status(404).send("Child not found");
+
+    const incidents = await prisma.incident.findMany({
+      where: {
+        childId: child.id,
+      },
+    });
+
+    let score = 0;
+
+    incidents.forEach((incident) => {
+      score += incident.severity;
+    });
+
+    return res.json({ behaviourScore: score });
+  } catch (error) {
+    return res.status(500).send((error as Error).message);
+  }
+});

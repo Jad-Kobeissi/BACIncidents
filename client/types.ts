@@ -24,5 +24,6 @@ export interface TIncident {
   category: Category;
   child: TChild;
   childId: number;
+  severity: number;
   occurredAt: Date;
 }

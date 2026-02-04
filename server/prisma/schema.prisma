@@ -38,6 +38,7 @@ model Incident {
   category Category
   child Child @relation(fields: [childId], references: [id])
   childId Int
+  severity Int
   occurredAt DateTime 
 }
 

@@ -107,6 +107,18 @@ export default function Incident({ incident }: { incident: TIncident }) {
           >
             <Text style={{ color: "white" }}>{incident.category}</Text>
           </View>
+          <View
+            style={{
+              backgroundColor: "white",
+              padding: 5,
+              paddingHorizontal: 15,
+              borderRadius: 15,
+            }}
+          >
+            <Text style={{ textTransform: "capitalize" }}>
+              Severity: {incident.severity}
+            </Text>
+          </View>
         </View>
       </View>
     </MotiView>
