@@ -16,6 +16,12 @@ enum Category {
   Warning
   Information
   Urgent
+  Positive
+}
+enum Type {
+  positive
+  negative
+  informational
 }
 model Parent {
   id Int @id @default(autoincrement())
@@ -36,10 +42,11 @@ model Incident {
   title String
   description String
   category Category
+  type Type 
   child Child @relation(fields: [childId], references: [id])
   childId Int
-  severity Int
-  occurredAt DateTime 
+  severity Int?
+  occurredAt DateTime
 }
 
 model Admin {

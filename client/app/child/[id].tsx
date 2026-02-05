@@ -14,7 +14,6 @@ export default function ChildIncidents() {
   const [incidents, setIncidents] = useState<TIncident[]>([]);
   const [page, setPage] = useState<number>(1);
   const [error, setError] = useState<string | null>(null);
-  const [score, setScore] = useState<number | null>(null);
   const fetchChild = async () => {
     axios
       .get(`${process.env.EXPO_PUBLIC_API_URL}/api/child/${id}`, {
@@ -31,20 +30,6 @@ export default function ChildIncidents() {
       .catch((err) => {
         alert("There was an error: " + err.response.data);
         console.log(err.response.data);
-        setError(err.response.data || "An unexpected error occurred.");
-      });
-  };
-  const fetchBehaviourScore = async () => {
-    axios
-      .get(`${process.env.EXPO_PUBLIC_API_URL}/api/child/behaviour/${id}`, {
-        headers: {
-          Authorization: `Bearer ${await SecureStore.getItemAsync("token")}`,
-        },
-      })
-      .then((res) => {
-        setScore(res.data.behaviourScore);
-      })
-      .catch((err) => {
         setError(err.response.data || "An unexpected error occurred.");
       });
   };
@@ -74,7 +59,6 @@ export default function ChildIncidents() {
   useEffect(() => {
     fetchChild();
     fetchIncidents();
-    fetchBehaviourScore();
   }, []);
   return (
     <View style={{ alignItems: "center", marginVertical: 200, gap: 30 }}>
@@ -105,9 +89,6 @@ export default function ChildIncidents() {
           {child?.name.split(" ")[0].toLocaleLowerCase()}
         </Text>
       </View>
-      <Text style={{ fontSize: 18, fontWeight: "500" }}>
-        Incidents Score: {score}
-      </Text>
       {error && (
         <Text style={{ color: colors.dangerColor, fontSize: 18 }}>{error}</Text>
       )}

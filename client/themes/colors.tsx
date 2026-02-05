@@ -5,4 +5,5 @@ export const colors = {
   borderColor: "#e5e7eb",
   dangerColor: "#e32510",
   warningColor: "#eecc43",
+  positiveColor: "#34c759",
 };

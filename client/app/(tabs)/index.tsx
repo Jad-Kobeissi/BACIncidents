@@ -90,7 +90,7 @@ export default function Page() {
           </Text>
         </View>
       </View>
-      <View>
+      <View style={{ flex: 1 }}>
         <Text
           style={{
             fontSize: 24,
@@ -102,28 +102,29 @@ export default function Page() {
           Recent Incidents
         </Text>
         <FlatList
+          style={{ flex: 1 }}
           data={incidents}
           onEndReached={fetchIncidents}
           onEndReachedThreshold={0.5}
           renderItem={({ item }) => <Incident incident={item} key={item.id} />}
           keyExtractor={(item) => item.id.toString()}
+          ListFooterComponent={
+            error !== "" && error !== null ? (
+              <Text
+                style={{
+                  color: colors.dangerColor,
+                  fontSize: 18,
+                  textAlign: "center",
+                  marginVertical: 60,
+                  fontWeight: "500",
+                }}
+              >
+                {error}
+              </Text>
+            ) : null
+          }
         ></FlatList>
       </View>
-      {error != ""
-        ? error !== null && (
-            <Text
-              style={{
-                color: colors.dangerColor,
-                fontSize: 18,
-                textAlign: "center",
-                marginVertical: 60,
-                fontWeight: "500",
-              }}
-            >
-              {error}
-            </Text>
-          )
-        : null}
     </View>
   );
 }

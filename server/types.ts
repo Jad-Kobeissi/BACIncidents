@@ -2,6 +2,12 @@ enum Category {
   Warning,
   Information,
   Urgent,
+  Positive,
+}
+enum Type {
+  positive,
+  negative,
+  informational,
 }
 export interface TParent {
   id: number;
@@ -24,6 +30,7 @@ export interface TIncident {
   category: Category;
   child: TChild;
   childId: number;
+  type: Type;
   occurredAt: Date;
 }
 export interface TJWT {
